@@ -42,7 +42,7 @@ function CalendarDays(props) {
    
      
       useEffect(() => {
-            axios.post("/")
+            axios.post("https://calendar-mjzv.onrender.com/")
                   .then(res => setMyappoint(res.data.Data))
                   .catch(err => console.log(err))
       }, [props.day, show1,show,drop])
@@ -77,7 +77,7 @@ function CalendarDays(props) {
                               ZipCode: event.target[6].value,
                         }
                   }
-                  axios.post("/", obj)
+                  axios.post("https://calendar-mjzv.onrender.com/", obj)
                         .then(res => setShow(false))
                         .catch(err => console.log(err))
 
@@ -104,7 +104,7 @@ function CalendarDays(props) {
                   prevdate: dragItem.current,
                   update: dragOverItem.current
             }
-            axios.post("/", obj)
+            axios.post("https://calendar-mjzv.onrender.com/", obj)
                   .then((res) => setdrop(!drop))
                   .catch(err => console.log(err))
       }
@@ -113,7 +113,7 @@ function CalendarDays(props) {
             let obj = {
                   delete: date
             }
-            axios.post("/", obj)
+            axios.post("https://calendar-mjzv.onrender.com/", obj)
                   .then((res) => setShow1(false))
                   .catch(err => console.log(err))
       }
