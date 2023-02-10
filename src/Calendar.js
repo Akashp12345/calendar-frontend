@@ -7,6 +7,7 @@ import Col from 'react-bootstrap/Col';
 import axios from 'axios'
 
 function CalendarDays(props) {
+      const[drop,setdrop]=useState(false)
       const [show1, setShow1] = useState(false)
       const dragItem = useRef();
       const dragOverItem = useRef();
@@ -38,23 +39,24 @@ function CalendarDays(props) {
 
             currentDays.push(calendarDay);
       }
-      const Drop = (ind) => {
-            let obj = {
-                  prevdate: dragItem.current,
-                  update: dragOverItem.current
-            }
-            axios.post("/", obj)
-                  .then((res) => console.log(res.data))
+   
+     
+      useEffect(() => {
+            axios.post("/")
+                  .then(res => setMyappoint(res.data.Data))
                   .catch(err => console.log(err))
-      }
-      const Delete = (date) => {
-            let obj = {
-                  delete: date
+      }, [props.day, show1,show,drop])
+
+      //To Add New AppointMents
+      const Add = () => {
+            let match = currentDays.find(item => item.selected)
+            if(!myAppoints){
+                  setShow(true)
             }
-            axios.post("/", obj)
-                  .then((res) => setShow1(false))
-                  .catch(err => console.log(err))
+            myAppoints && myAppoints.find(item => item.Date === match.number + "/" + (Number(match.month + 1)) + "/" + match.year ? setShow1(true) : setShow(true))
+            setSelected(match)
       }
+
       const handleSubmit = (event) => {
             event.preventDefault()
             const form = event.currentTarget;
@@ -83,23 +85,6 @@ function CalendarDays(props) {
 
             setValidated(true);
       };
-      useEffect(() => {
-            axios.post("/")
-                  .then(res => setMyappoint(res.data.Data))
-                  .catch(err => console.log(err))
-      }, [props.day, Drop, Delete, handleSubmit])
-
-      //To Add New AppointMents
-      const Add = () => {
-            let match = currentDays.find(item => item.selected)
-            if(!myAppoints){
-                  setShow(true)
-            }
-            myAppoints && myAppoints.find(item => item.Date == match.number + "/" + (Number(match.month + 1)) + "/" + match.year ? setShow1(true) : setShow(true))
-            setSelected(match)
-      }
-
-
 
       //Drag the appointment
       const dragStart = (e, position) => {
@@ -110,9 +95,27 @@ function CalendarDays(props) {
             dragOverItem.current = position;
       };
       const View = (date) => {
-            let find = myAppoints.find((item) => item.Date == date)
+            let find = myAppoints.find((item) => item.Date === date)
             setDetails(find)
             setShow1(true)
+      }
+      const Drop = (ind) => {
+            let obj = {
+                  prevdate: dragItem.current,
+                  update: dragOverItem.current
+            }
+            axios.post("/", obj)
+                  .then((res) => setdrop(!drop))
+                  .catch(err => console.log(err))
+      }
+      //Delete
+      const Delete = (date) => {
+            let obj = {
+                  delete: date
+            }
+            axios.post("/", obj)
+                  .then((res) => setShow1(false))
+                  .catch(err => console.log(err))
       }
 
 
@@ -127,7 +130,7 @@ function CalendarDays(props) {
                                           {day.selected && <p style={{ paddingTop: "30px", marginRight: "70px", fontSize: "30px" }} onClick={() => Add()}>➕</p>}
                                           {myAppoints && myAppoints.map((item, ind) =>
                                                 <div key={ind}>
-                                                      {day.number + "/" + (Number(day.month + 1)) + "/" + day.year == item.Date && <p style={{ paddingTop: "30px", fontSize: "30px" }} onDragStart={(e) => dragStart(e, item.Date)} onClick={() => View(item.Date)} draggable>❗</p>}
+                                                      {day.number + "/" + (Number(day.month + 1)) + "/" + day.year === item.Date && <p style={{ paddingTop: "30px", fontSize: "30px" }} onDragStart={(e) => dragStart(e, item.Date)} onClick={() => View(item.Date)} draggable>❗</p>}
                                                      
                                                 </div>
                                           )}
