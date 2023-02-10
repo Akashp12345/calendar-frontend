@@ -243,7 +243,7 @@ function CalendarDays(props) {
                               <Form >
                                     <Row className="mb-3">
                                           <Form.Group as={Col} >
-                                                <Form.Label>Full Name : {details && details.FullName}</Form.Label>
+                                                <Form.Label>Appointment With : {details && details.FullName}</Form.Label>
 
                                           </Form.Group>
 
